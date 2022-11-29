@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+  freshrss:
+    image: lscr.io/linuxserver/freshrss:latest
+    container_name: freshrss
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Perth
+    volumes:
+      - ./config:/config
+    ports:
+      - 18190:80
+    restart: unless-stopped
+
+  fulltextrss:
+    build: ./fulltextrss
+    image: "heussd/fivefilters-full-text-rss:latest"
+    container_name: fulltextrss
+    environment:
+      - FTR_ADMIN_PASSWORD=
+    volumes:
+      - "rss-cache:/var/www/html/cache"
+    ports:
+      - "18191:80"
+    restart: unless-stopped
+
+volumes:
+  rss-cache:
